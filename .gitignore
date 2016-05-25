@@ -1,0 +1,5 @@
+.env
+screens
+public/screens
+node_modules
+.DS_Store

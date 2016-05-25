@@ -1,0 +1,42 @@
+Better workflow for doing Calculords:
+
+Node server
+
+Start turn
+ - Take screenshot
+ - Deliver screenshot to frontend
+ - Manually input numbers
+ - Click "Calculate"
+  - Calculation runs
+  - send message w/ numbers to backend
+  - Backend saves picture id + numbers to DB
+ - User chooses best option
+ - User pushes "next turn" button
+  - Triggers screenshot
+ - repeat
+
+Frontend:
+More deliberate next turn button
+Tracking of what phase of turn (?)
+
+NN:
+Get MNIST data up and running with Synaptic
+
+
+
+
+Start turn:
+ - take screenshot & send
+ - User inputs #'s
+ - JS calc math on frontend
+ - send to backend, which pushes buttons
+ - When all buttons pushed, take new screenshot, send to frontend
+
+
+NO NEED FOR SOLUTION PICK ON FRONTEND (for now)
+
+Frontend states:
+ - start button
+ - input from screenshot
+ - Calc'ing
+ - Waiting for backend

@@ -4,7 +4,7 @@ block content
   .container(ng-cloak)
     h1 Calculords Haaax
     //- Start button
-    .row(ng-if='!g.loading && !g.results && !g.screenshotURL')
+    .row(ng-if='!g.screenshotURL')
       div
         button.btn(ng-click='g.startLevel()') Start Level
 
@@ -22,7 +22,7 @@ block content
           ) {{ g.percent | number }}%
 
     //- Have screenshot, run level
-    .row(ng-if='g.screenshotURL')
+    .row(ng-if='g.screenshotURL || g.loading')
       form(ng-submit='g.runLevel()')
         .row
           .col-xs-6

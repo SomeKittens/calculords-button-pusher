@@ -60,11 +60,13 @@ class PhoneInterface {
   pushButtonAll (fn, key) {
     return idx => {
       console.log(`------pushButtonAll ${key}------`);
-      console.log(key, this.selected);
+      console.log('key:', key);
+      console.log('selected:', this.selected);
+      console.log('idx', idx);
       if (key === 'nums' && this.selected.x === idx.x && this.selected.y === idx.y) {
         return bluebird.resolve();
       }
-      console.log('pushing', idx);
+      console.log('actually pushing ze button', idx);
       return this.pushButton(fn(idx));
     };
   }
@@ -74,11 +76,6 @@ class PhoneInterface {
         for (let y = 0; y < 3; y++) {
           if (this[key][x][y] === item) {
             this[key][x][y] = this.using;
-            // console.log(`------getItemIdx ${key}------`);
-            // console.log(item);
-            // console.log(x, y);
-            // console.log(key, this[key]);
-            // console.log('------------------------');
             return {x,y};
           }
         }
@@ -102,7 +99,7 @@ class PhoneInterface {
   // Otherwise, we'd never be able to deselect!
   deselect () {
     console.log('deselect', this.selected);
-    if (this.selected.x && this.selected.y) {
+    if (this.selected.x !== undefined && this.selected.y !== undefined) {
       return this.pushButton(this.coordsByIdx('nums')(this.selected))
       .then(() => {
         this.selected = {};
@@ -149,11 +146,11 @@ class PhoneInterface {
     let todo = this.nums[0].concat(this.nums[1], this.nums[2])
     .filter(item => typeof item !== 'symbol');
 
-    let p = this.deselect()
+    return this.deselect()
     .then(() => {
       return bluebird.each(todo, num => {
         console.log('queuing', num);
-        p = p
+        return bluebird.resolve()
           .then(() => console.log('\n\n\n\n\ndeploying:', num))
           .then(() => pushButtonNum(getNumIdx(num)))
           .then(() => pushButtonCard(getCardIdx(num)))

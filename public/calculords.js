@@ -62,52 +62,7 @@ function runLevel(cards, initInts) {
    */
   function explore (stack, ints, init) {
     called++;
-    ints = ints.sort();
-
-    // If we've already gone down this path, no need to redo work
-    let key = ints.join();
-    if (paths[key]) {
-      return;
-    } else {
-      paths[key] = true;
-    }
-
-
-    // Base cases
-    if (ints.length <= cards.length) {
-      doneCheck++;
-      // We're done if all of the ints we have match (uniquely) cards
-      let j = 0;
-      for (let i = 0; i < cards.length; i++) {
-        if (cards[i] === ints[j]) {
-          // Match, increment both
-          j++;
-        }
-      }
-
-      // If all of the integer cards have matches, we've got a solution!
-      if (j === ints.length) {
-        doneDone++;
-
-        // This check may be redundant with the dynamic programming stuff above
-        let alreadyFound = solutions.some(function alreadyFound(s) {
-          if (s.ints.length !== ints.length) { return false; }
-          return s.ints.every(function intEvery(int, idx) {
-            return int === ints[idx];
-          });
-        });
-        if (!alreadyFound) {
-          solutions.push({
-            stack: stack,
-            ints: ints
-          });
-        }
-        return;
-      }
-    }
-
-    // We're done if we only have one number left (and it doesn't match a card)
-    if (ints.length === 1) { return; }
+    // ints = ints.sort();
 
     // Search!
     search++;
@@ -124,12 +79,57 @@ function runLevel(cards, initInts) {
 
         for (let k = 0; k < operations.length; k++) {
           let r = operations[k](left, right);
+          let checkInts = localInts.concat(r.result).sort();
 
-          explore(stack.concat(r.str), localInts.concat(r.result));
+          // If we've already gone down this path, no need to redo work
+          let key = checkInts.join();
+          if (paths[key]) {
+            continue;
+          } else {
+            paths[key] = true;
+          }
+
+
+          // Base cases
+          if (checkInts.length <= cards.length) {
+            doneCheck++;
+            // We're done if all of the checkInts we have match (uniquely) cards
+            let j = 0;
+            for (let i = 0; i < cards.length; i++) {
+              if (cards[i] === checkInts[j]) {
+                // Match, increment both
+                j++;
+              }
+            }
+
+            // If all of the integer cards have matches, we've got a solution!
+            if (j === checkInts.length) {
+              doneDone++;
+
+              // This check may be redundant with the dynamic programming stuff above
+              let alreadyFound = solutions.some(function alreadyFound(s) {
+                if (s.ints.length !== checkInts.length) { return false; }
+                return s.ints.every(function intEvery(int, idx) {
+                  return int === checkInts[idx];
+                });
+              });
+              if (!alreadyFound) {
+                solutions.push({
+                  stack: stack.concat(r.str),
+                  ints: checkInts
+                });
+              }
+              continue;
+            }
+          }
+
+          // We're done if we only have one number left (and it doesn't match a card)
+          if (ints.length === 1) { continue; }
+
+          explore(stack.concat(r.str), checkInts);
         }
         if (init) {
           postMessage(++doneWork / totalWork);
-          console.log(left, right);
         }
         localInts.unshift(right);
       }

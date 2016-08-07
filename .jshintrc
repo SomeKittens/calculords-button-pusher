@@ -1,0 +1,16 @@
+{
+  "predef": ["describe", "it", "browser", "expect", "element", "by", "beforeEach", "afterEach", "protractor"],
+	"browser": true,
+	"node": true,
+	"curly": true,
+	"eqeqeq": true,
+	"quotmark": "single",
+	"strict": true,
+	"unused": true,
+  "esnext": true,
+  "undef": true,
+  "loopfunc": true,
+  "globals": {
+    "expect": true
+  }
+}

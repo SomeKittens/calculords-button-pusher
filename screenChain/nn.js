@@ -1,10 +1,18 @@
 'use strict';
 
-let synaptic = require('synaptic');
-let db = require('./data/trainingSet.json');
-let fs = require('fs');
-let shuffle = require('./util').shuffle;
+// Load stuff
 
+// neural network lib
+let synaptic = require('synaptic');
+
+// Training data
+let db = require('./data/trainingSet.json');
+
+let shuffle = require('./util').shuffle;
+let fs = require('fs');
+
+// We have a TON of data, better to use only some of it
+// Shuffle though to enusre we've got something of everything
 let trainingDatas = shuffle(db.nums).slice(0, 100);
 let inputNeurons = trainingDatas[0].input.length;
 
@@ -12,6 +20,7 @@ let Layer = synaptic.Layer;
 let Network = synaptic.Network;
 let Trainer = synaptic.Trainer;
 
+// Fairly typical network construction
 let inputLayer = new Layer(inputNeurons);
 let hiddenLayer = new Layer(100);
 let outputLayer = new Layer(10);
@@ -25,6 +34,9 @@ let myNetwork = new Network({
   output: outputLayer
 });
 
+
+// Actually do the training
+// https://github.com/cazala/synaptic/wiki/Trainer
 let trainer = new Trainer(myNetwork);
 trainer.train(trainingDatas, {
   rate: 0.1,
@@ -36,6 +48,7 @@ trainer.train(trainingDatas, {
 });
 console.log('yey trained');
 
+// Save first so if something goes wrong later we have the network
 console.log('toJSON');
 let netJSON = JSON.stringify(myNetwork.toJSON());
 
